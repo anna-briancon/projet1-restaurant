@@ -1,30 +1,46 @@
+const e = require('express');
 const Restaurant = require('../models/restaurant');
-const User = require('../models/user');
 
-exports.updateRestaurant = async (req, res) => {
+exports.getRestaurantInfo = async (req, res) => {
   try {
-    const restaurant = await Restaurant.findOne({ where: { UserId: req.user.id } });
+    const restaurant = await Restaurant.findOne({ where: { userId: req.user.id } });
+    
     if (!restaurant) {
       return res.status(404).json({ message: 'Restaurant not found' });
     }
-    await restaurant.update(req.body);
-    res.json(restaurant);
+
+    res.json({
+      name: restaurant.name,
+    });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    console.error('Error fetching restaurant info:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
-exports.getRestaurantDetails = async (req, res) => {
+exports.updateRestaurant = async (req, res) => {
   try {
-    const restaurant = await Restaurant.findOne({ 
-      where: { UserId: req.user.id },
-      include: [{ model: User, attributes: ['name', 'email', 'address', 'postalCode', 'city'] }]
-    });
+    const { name, address, description } = req.body;
+    const restaurant = await Restaurant.findOne({ where: { userId: req.user.id } });
+
     if (!restaurant) {
       return res.status(404).json({ message: 'Restaurant not found' });
     }
-    res.json(restaurant);
+
+    restaurant.name = name;
+    restaurant.address = address;
+    restaurant.description = description;
+
+    await restaurant.save();
+
+    res.json({
+      id: restaurant.id,
+      name: restaurant.name,
+      address: restaurant.address,
+      description: restaurant.description,
+    });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error updating restaurant:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 };

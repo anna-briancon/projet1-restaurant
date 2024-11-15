@@ -20,6 +20,9 @@ function Login() {
       localStorage.setItem('role', response.data.user.role);
       if (response.data.user.role === 'ADMIN') {
         navigate('/admin');
+      } else if (response.data.user.role === 'RESTAURANT') {
+        localStorage.setItem('restaurantInfo', JSON.stringify(response.data.restaurant));
+        navigate('/restaurant');
       } else {
         navigate('/');
       }

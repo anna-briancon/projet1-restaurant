@@ -6,6 +6,10 @@ import Login from './components/Login';
 import AdminDashboard from './components/admin/AdminDashboard';
 import AddRestaurant from './components/admin/AddRestaurant';
 import Middleware from './components/Middleware';
+import RestaurantLayout from './components/restaurant/RestaurantLayout';
+import RestaurantDashboard from './components/restaurant/RestaurantDashboard';
+import Dishes from './components/restaurant/Dishes';
+import Orders from './components/restaurant/Orders';
 
 function App() {
   return (
@@ -19,6 +23,11 @@ function App() {
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/add-restaurant" element={<AddRestaurant />} />
           </Route>
+          <Route path="/restaurant" element={<RestaurantLayout />}>
+          <Route index element={<RestaurantDashboard />} />
+          <Route path="dishes" element={<Dishes />} />
+          <Route path="orders" element={<Orders />} />
+        </Route>
         </Routes>
       </div>
     </Router>

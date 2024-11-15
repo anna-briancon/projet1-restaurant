@@ -19,8 +19,9 @@ Restaurant.associate({ User, Dish });
 Dish.associate({ Restaurant });
 
 app.use('/api/auth', authRoutes);
-app.use('/api/restaurants', restaurantRoutes);
+app.use('/api/restaurant', restaurantRoutes);
 app.use('/api/restaurateurs', restaurateurRoutes);
+
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');

@@ -45,13 +45,24 @@ exports.getAllRestaurateurs = async (req, res) => {
 
 exports.deleteRestaurateur = async (req, res) => {
   try {
-    const restaurateur = await User.findByPk(req.params.id);
-    if (!restaurateur || restaurateur.role !== 'RESTAURANT') {
+    const { id } = req.params;
+    const restaurateur = await User.findOne({
+      where: { id, role: 'RESTAURANT' },
+      include: [{ model: Restaurant, as: 'Restaurant' }]
+    });
+
+    if (!restaurateur) {
       return res.status(404).json({ message: 'Restaurateur not found' });
     }
+
+    if (restaurateur.Restaurant) {
+      await restaurateur.Restaurant.destroy();
+    }
     await restaurateur.destroy();
-    res.json({ message: 'Restaurateur deleted successfully' });
+
+    res.json({ message: 'Restaurateur and associated restaurant deleted successfully' });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error deleting restaurateur:', error);
+    res.status(500).json({ message: 'Error deleting restaurateur', error: error.message });
   }
 };

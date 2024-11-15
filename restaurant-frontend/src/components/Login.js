@@ -10,7 +10,7 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3000/api/auth/login', { email, password });
+      const response = await axios.post('http://localhost:8081/api/auth/login', { email, password });
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('role', response.data.user.role);
       if (response.data.user.role === 'ADMIN') {
@@ -19,7 +19,8 @@ function Login() {
         navigate('/');
       }
     } catch (error) {
-      alert('Erreur de connexion');
+      console.error('Erreur de connexion:', error);
+      alert('Erreur de connexion. Veuillez vérifier vos identifiants.');
     }
   };
 
@@ -27,8 +28,20 @@ function Login() {
     <div>
       <h2>Connexion</h2>
       <form onSubmit={handleSubmit}>
-        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <input type="password" placeholder="Mot de passe" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <input 
+          type="email" 
+          value={email} 
+          onChange={(e) => setEmail(e.target.value)} 
+          placeholder="Email" 
+          required 
+        />
+        <input 
+          type="password" 
+          value={password} 
+          onChange={(e) => setPassword(e.target.value)} 
+          placeholder="Mot de passe" 
+          required 
+        />
         <button type="submit">Se connecter</button>
       </form>
     </div>

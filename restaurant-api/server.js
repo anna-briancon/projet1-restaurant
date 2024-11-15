@@ -10,12 +10,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Importez tous vos modèles
 const User = require('./src/models/user');
 const Restaurant = require('./src/models/restaurant');
 const Dish = require('./src/models/dish');
 
-// Initialisez les associations
 User.associate({ Restaurant });
 Restaurant.associate({ User, Dish });
 Dish.associate({ Restaurant });
@@ -28,7 +26,7 @@ app.use((err, req, res, next) => {
   res.status(500).send('Something broke!');
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8081;
 
 sequelize.sync({ force: false }).then(() => {
   app.listen(PORT, () => {

@@ -15,12 +15,15 @@ function AdminDashboard() {
 
   const fetchRestaurants = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/api/restaurateurs', {
+      const response = await axios.get('http://localhost:8081/api/restaurateurs', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       setRestaurants(response.data);
     } catch (error) {
       console.error('Erreur lors de la récupération des restaurants', error);
+      if (error.response && error.response.status === 401) {
+        handleLogout();
+      }
     }
   };
 
@@ -31,7 +34,7 @@ function AdminDashboard() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:3000/api/restaurateurs', newRestaurant, {
+      await axios.post('http://localhost:8081/api/restaurateurs', newRestaurant, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       alert('Restaurant ajouté avec succès');

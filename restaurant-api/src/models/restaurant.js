@@ -24,7 +24,15 @@ const Restaurant = sequelize.define('Restaurant', {
   timestamps: true
 });
 
-Restaurant.hasMany(Dish);
-Dish.belongsTo(Restaurant);
+Restaurant.associate = (models) => {
+  Restaurant.belongsTo(models.User, { 
+    foreignKey: 'UserId',
+    as: 'User'
+  });
+  Restaurant.hasMany(models.Dish, {
+    foreignKey: 'RestaurantId',
+    as: 'Dishes'
+  });
+};
 
 module.exports = Restaurant;

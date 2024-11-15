@@ -30,13 +30,16 @@ exports.createRestaurateur = async (req, res) => {
 
 exports.getAllRestaurateurs = async (req, res) => {
   try {
+    console.log('Début de getAllRestaurateurs');
     const restaurateurs = await User.findAll({
       where: { role: 'RESTAURANT' },
-      include: Restaurant
+      include: [{ model: Restaurant, as: 'Restaurant' }]
     });
+    console.log('Restaurateurs trouvés:', JSON.stringify(restaurateurs, null, 2));
     res.json(restaurateurs);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Erreur dans getAllRestaurateurs:', error);
+    res.status(500).json({ message: 'Erreur serveur', error: error.message });
   }
 };
 

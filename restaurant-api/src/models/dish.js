@@ -19,4 +19,11 @@ const Dish = sequelize.define('Dish', {
   timestamps: true
 });
 
+Dish.associate = (models) => {
+  Dish.belongsTo(models.Restaurant, {
+    foreignKey: 'RestaurantId',
+    as: 'Restaurant'
+  });
+};
+
 module.exports = Dish;

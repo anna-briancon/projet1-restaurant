@@ -45,6 +45,13 @@ User.beforeCreate(async (user) => {
   user.password = await bcrypt.hash(user.password, 8);
 });
 
+User.associate = (models) => {
+  User.hasOne(models.Restaurant, {
+    foreignKey: 'UserId',
+    as: 'Restaurant'
+  });
+};
+
 User.prototype.toJSON = function () {
   const values = { ...this.get() };
   delete values.password;

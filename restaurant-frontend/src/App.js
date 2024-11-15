@@ -8,7 +8,9 @@ import AddRestaurant from './components/admin/AddRestaurant';
 import Middleware from './components/Middleware';
 import RestaurantLayout from './components/restaurant/RestaurantLayout';
 import RestaurantDashboard from './components/restaurant/RestaurantDashboard';
-import Dishes from './components/restaurant/Dishes';
+import Dishes from './components/dish/Dishes';
+import AddDish from './components/dish/AddDish';
+
 import Orders from './components/restaurant/Orders';
 
 function App() {
@@ -26,6 +28,7 @@ function App() {
           <Route path="/restaurant" element={<RestaurantLayout />}>
           <Route index element={<RestaurantDashboard />} />
           <Route path="dishes" element={<Dishes />} />
+          <Route path="add-dish" element={<AddDish />} />
           <Route path="orders" element={<Orders />} />
         </Route>
         </Routes>

@@ -4,6 +4,7 @@ const sequelize = require('./src/config/database');
 const authRoutes = require('./src/routes/authRoutes');
 const restaurantRoutes = require('./src/routes/restaurantRoutes');
 const restaurateurRoutes = require('./src/routes/restaurateurRoutes');
+const dishRoutes = require('./src/routes/dishRoutes');
 
 const app = express();
 
@@ -21,6 +22,7 @@ Dish.associate({ Restaurant });
 app.use('/api/auth', authRoutes);
 app.use('/api/restaurant', restaurantRoutes);
 app.use('/api/restaurateurs', restaurateurRoutes);
+app.use('/api/dishes', dishRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

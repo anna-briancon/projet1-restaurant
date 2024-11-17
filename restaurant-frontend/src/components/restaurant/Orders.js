@@ -1,88 +1,92 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Trash2 } from 'lucide-react';
 
 function Orders() {
-  const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+    const [orders, setOrders] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-  useEffect(() => {
-    fetchOrders();
-  }, []);
+    useEffect(() => {
+        fetchOrders();
+    }, []);
 
-  const fetchOrders = async () => {
-    try {
-      const response = await axios.get('http://localhost:8081/api/orders', {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
-      setOrders(response.data);
-      setLoading(false);
-    } catch (err) {
-      setError('Erreur lors du chargement des commandes');
-      setLoading(false);
-    }
-  };
+    const fetchOrders = async () => {
+        try {
+            setLoading(true);
+            const response = await axios.get('http://localhost:8081/api/orders/restaurant', {
+                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+            });
+            setOrders(response.data);
+            setError(null);
+        } catch (error) {
+            console.error('Erreur lors de la récupération des commandes', error);
+            setError('Impossible de charger les commandes. Veuillez réessayer plus tard.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
-  const handleStatusChange = async (orderId, newStatus) => {
-    try {
-      await axios.patch(`http://localhost:8081/api/orders/${orderId}`, 
-        { status: newStatus },
-        { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }}
-      );
-      setOrders(orders.map(order => 
-        order.id === orderId ? { ...order, status: newStatus } : order
-      ));
-    } catch (err) {
-      setError('Erreur lors de la mise à jour du statut de la commande');
-    }
-  };
+    const handleDelete = async (orderId) => {
+      if (window.confirm('Êtes-vous sûr de vouloir supprimer cette commande ?')) {
+        try {
+          await axios.delete(`http://localhost:8081/api/orders/${orderId}`, {
+            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+          });
+          setOrders(orders.filter(order => order.id !== orderId));
+        } catch (error) {
+          console.error('Erreur lors de la suppression de la commande', error);
+          alert('Impossible de supprimer la commande. Veuillez réessayer plus tard.');
+        }
+      }
+    };
 
-  if (loading) return <div className="text-center">Chargement...</div>;
-  if (error) return <div className="text-center text-red-500">{error}</div>;
-
-  return (
-    <div className="max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold text-[#003670] mb-6">Commandes</h1>
-      <div className="space-y-6">
-        {orders.map(order => (
-          <div key={order.id} className="bg-white rounded-lg shadow-md p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold text-[#003670]">Commande #{order.id}</h2>
-              <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                order.status === 'pending' ? 'bg-yellow-200 text-yellow-800' :
-                order.status === 'preparing' ? 'bg-blue-200 text-blue-800' :
-                order.status === 'ready' ? 'bg-green-200 text-green-800' :
-                'bg-gray-200 text-gray-800'
-              }`}>
-                {order.status}
-              </span>
-            </div>
-            <div className="mb-4">
-              <h3 className="font-semibold text-[#003670] mb-2">Plats commandés:</h3>
-              <ul className="list-disc list-inside">
-                {order.dishes.map(dish => (
-                  <li key={dish.id} className="text-[#003670]">{dish.name} - {dish.quantity}x</li>
-                ))}
-              </ul>
-            </div>
-            <div className="flex justify-between items-center">
-              <p className="text-[#003670] font-bold">Total: {order.totalAmount} €</p>
-              <select
-                value={order.status}
-                onChange={(e) => handleStatusChange(order.id, e.target.value)}
-                className="bg-[#F0F8FF] border border-[#A7C7E7] text-[#003670] rounded-md px-3 py-2"
-              >
-                <option value="pending">En attente</option>
-                <option value="preparing">En préparation</option>
-                <option value="ready">Prêt</option>
-                <option value="delivered">Livré</option>
-              </select>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+    return (
+        <div className="bg-white shadow-md rounded-lg p-6">
+            <h2 className="text-2xl font-bold text-[#003670] mb-6">Commandes reçues</h2>
+            {loading && (
+                <p className="text-[#003670]">Chargement des commandes...</p>
+            )}
+            {error && (
+                <p className="text-red-500 bg-red-100 p-3 rounded">{error}</p>
+            )}
+            {!loading && !error && orders.length > 0 && (
+                <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-[#A7C7E7]">
+                        <thead className="bg-[#F0F8FF]">
+                            <tr>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-[#003670] uppercase tracking-wider">Email du client</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-[#003670] uppercase tracking-wider">Total</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-[#003670] uppercase tracking-wider">Nb d'articles</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-[#003670] uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-[#A7C7E7]">
+                            {orders.map((order) => (
+                                <tr key={order.id}>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-[#003670]">{order.Customer.email}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-[#003670]">{order.totalPrice} €</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-[#003670]">{order.itemCount}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                        <button
+                                            onClick={() => handleDelete(order.id)}
+                                            className="text-red-600 hover:text-red-900 transition-colors duration-200 flex items-center"
+                                        >
+                                            <Trash2 className="mr-1" size={16} />
+                                            Annuler la commande
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
+            {!loading && !error && orders.length === 0 && (
+                <p className="text-[#003670] bg-[#F0F8FF] p-4 rounded">Aucune commande trouvée.</p>
+            )}
+        </div>
+    );
 }
 
 export default Orders;

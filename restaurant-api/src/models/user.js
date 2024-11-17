@@ -50,6 +50,10 @@ User.associate = (models) => {
     foreignKey: 'UserId',
     as: 'Restaurant'
   });
+  User.hasMany(models.Order, {
+    foreignKey: 'UserId',
+    as: 'Orders'
+  });
 };
 
 User.prototype.toJSON = function () {

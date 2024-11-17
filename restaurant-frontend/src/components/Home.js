@@ -7,8 +7,7 @@ function Home() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#F0F8FF]">
       <div className="text-center mb-10">
         <Utensils className="inline-block text-[#003670] mb-4" size={48} />
-        <h1 className="text-4xl font-bold text-[#003670] mb-2">Bienvenue sur la gestion de restaurant</h1>
-        <p className="text-xl text-[#003670] opacity-75">Votre solution complète pour la gestion de restaurant</p>
+        <h1 className="text-4xl font-bold text-[#003670] mb-2">Accueil</h1>
       </div>
       <div className="space-x-4">
         <Link to="/signup">

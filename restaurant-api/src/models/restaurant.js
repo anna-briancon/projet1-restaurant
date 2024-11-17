@@ -33,6 +33,14 @@ Restaurant.associate = (models) => {
     foreignKey: 'RestaurantId',
     as: 'Dishes'
   });
+  Restaurant.belongsTo(models.User, {
+    foreignKey: 'UserId',
+    as: 'Owner'
+  });
+  Restaurant.hasMany(models.Order, {
+    foreignKey: 'RestaurantId',
+    as: 'Orders'
+  });
 };
 
 module.exports = Restaurant;

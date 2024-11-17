@@ -15,7 +15,7 @@ exports.createRestaurateur = async (req, res) => {
     });
 
     const restaurant = await Restaurant.create({
-      name: `Restaurant de ${name}`,
+      name: `${name}`,
       address,
       postalCode,
       city,

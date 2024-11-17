@@ -24,7 +24,7 @@ function Login() {
         localStorage.setItem('restaurantInfo', JSON.stringify(response.data.restaurant));
         navigate('/restaurant');
       } else {
-        navigate('/');
+        navigate('/user');
       }
     } catch (error) {
       setError('Erreur de connexion. Veuillez vérifier vos identifiants.');

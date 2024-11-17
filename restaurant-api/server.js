@@ -6,6 +6,7 @@ const restaurantRoutes = require('./src/routes/restaurantRoutes');
 const restaurateurRoutes = require('./src/routes/restaurateurRoutes');
 const dishRoutes = require('./src/routes/dishRoutes');
 const orderRoutes = require('./src/routes/orderRoutes');
+const userRoutes = require('./src/routes/userRoutes');
 
 const app = express();
 
@@ -27,6 +28,8 @@ app.use('/api/restaurant', restaurantRoutes);
 app.use('/api/restaurateurs', restaurateurRoutes);
 app.use('/api/dishes', dishRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/user', userRoutes);
+
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

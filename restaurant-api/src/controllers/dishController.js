@@ -71,3 +71,23 @@ exports.deleteDish = async (req, res) => {
     res.status(500).json({ message: 'Erreur serveur' });
   }
 };
+
+exports.getDish = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const dish = await Dish.findByPk(id, {
+      include: {
+        model: Restaurant,
+        as: 'Restaurant',
+        attributes: ['name']
+      }
+    });
+    if (!dish) {
+      return res.status(404).json({ message: 'Plat non trouvé' });
+    }
+    res.json(dish);
+  } catch (error) {
+    console.error('Erreur lors de la récupération du plat:', error);
+    res.status(500).json({ message: 'Erreur serveur' });
+  }
+};

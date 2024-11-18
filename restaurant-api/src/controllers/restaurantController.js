@@ -72,7 +72,8 @@ exports.getRestaurantInfoUser = async (req, res) => {
     res.json({
       name: restaurant.name,
       address: restaurant.address,
-      description: restaurant.description,
+      postalCode: restaurant.postalCode,
+      city: restaurant.city,
     });
   } catch (error) {
     console.error('Error fetching restaurant info:', error);

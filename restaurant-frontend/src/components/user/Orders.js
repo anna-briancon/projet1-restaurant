@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { ShoppingBag, ShoppingCart, Calendar, CreditCard, Store } from 'lucide-react';
+import { ShoppingBag, Calendar, CreditCard, Store } from 'lucide-react';
 
 function OrdersList() {
   const [orders, setOrders] = useState([]);

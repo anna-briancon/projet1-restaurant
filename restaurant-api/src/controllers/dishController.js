@@ -3,7 +3,8 @@ const Restaurant = require('../models/restaurant');
 
 exports.createDish = async (req, res) => {
   try {
-    const { name, photo, price, description } = req.body;
+    const { name, price, description } = req.body;
+    const photo = req.file ? req.file.buffer : null;
 
     const restaurant = await Restaurant.findOne({ where: { userId: req.user.id } });
 

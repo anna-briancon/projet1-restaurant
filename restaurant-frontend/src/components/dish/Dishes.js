@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { Plus, Trash2, Edit } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
+
+function arrayBufferToBase64(buffer) {
+    let binary = '';
+    const bytes = new Uint8Array(buffer);
+    const len = bytes.byteLength;
+    for (let i = 0; i < len; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
+    return window.btoa(binary);
+}
 
 function Dishes() {
     const [dishes, setDishes] = useState([]);
@@ -18,7 +28,10 @@ function Dishes() {
             const response = await axios.get('http://localhost:8081/api/dishes', {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
-            setDishes(response.data);
+            setDishes(response.data.map(dish => ({
+                ...dish,
+                photo: dish.photo ? arrayBufferToBase64(dish.photo.data) : null
+            })));
             setError(null);
         } catch (error) {
             console.error('Erreur lors de la récupération des plats', error);
@@ -81,14 +94,20 @@ function Dishes() {
                             {dishes.map((dish) => (
                                 <tr key={dish.id}>
                                     <td className="px-6 py-4 text-sm text-[#003670]">{dish.name}</td>
-                                    <td className="px-6 py-4 text-sm text-[#003670]">{dish.photo}</td>
+                                    <td className="px-6 py-4 text-sm text-[#003670]">
+                                        {dish.photo ? (
+                                            <img src={`data:image/jpeg;base64,${dish.photo}`} alt={dish.name} className="w-20 h-20 object-cover rounded-md" />
+                                        ) : (
+                                            <span>Pas d'image</span>
+                                        )}
+                                    </td>
                                     <td className="px-6 py-4 text-sm text-[#003670]">{dish.price} €</td>
                                     <td className="px-6 py-4 text-sm text-[#003670] relative group">
                                         <span className="cursor-pointer">
                                             {truncateDescription(dish.description)}
                                         </span>
                                         {dish.description.length > 50 && (
-                                            <div className="absolute z-10 invisible bg-white border border-[#A7C7E7] p-2 rounded shadow-lg">
+                                            <div className="absolute z-10 invisible group-hover:visible bg-white border border-[#A7C7E7] p-2 rounded shadow-lg w-64">
                                                 {dish.description}
                                             </div>
                                         )}

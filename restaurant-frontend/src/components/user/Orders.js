@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { ShoppingBag, ShoppingCart, Calendar, CreditCard, Store } from 'lucide-react';
 
-function Orders() {
+function OrdersList() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -9,8 +10,9 @@ function Orders() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/user/orders', {
-          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        const token = localStorage.getItem('token');
+        const response = await axios.get('http://localhost:8081/api/user/orders', {
+          headers: { Authorization: `Bearer ${token}` }
         });
         setOrders(response.data);
         setLoading(false);
@@ -23,25 +25,58 @@ function Orders() {
     fetchOrders();
   }, []);
 
-  if (loading) return <div className="text-center py-8">Chargement...</div>;
-  if (error) return <div className="text-center py-8 text-red-500">{error}</div>;
+  if (loading) return <div className="flex justify-center items-center h-screen">
+    <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-[#003670]"></div>
+  </div>;
+
+  if (error) return <div className="text-red-500 text-center py-4">{error}</div>;
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-[#003670] mb-6">Mes Commandes</h1>
-      <div className="space-y-4">
-        {orders.map((order) => (
-          <div key={order.id} className="bg-white shadow-md rounded-lg p-4">
-            <h2 className="text-xl font-semibold text-[#003670]">Commande #{order.id}</h2>
-            <p className="text-gray-600">Date: {new Date(order.createdAt).toLocaleDateString()}</p>
-            <p className="mt-2">Restaurant: {order.restaurant.name}</p>
-            <p>Total: {order.totalPrice} €</p>
-            <p>Statut: {order.status}</p>
-          </div>
-        ))}
-      </div>
+      <h2 className="text-3xl font-bold text-[#003670] mb-6">Mes Commandes</h2>
+      {orders.length === 0 ? (
+        <p className="text-gray-500 text-center">Vous n'avez pas encore de commandes.</p>
+      ) : (
+        <div className="space-y-6">
+          {orders.map(order => (
+            <div key={order.id} className="bg-white shadow-md rounded-lg overflow-hidden">
+              <div className="p-6">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-xl font-semibold text-[#003670]">Commande #{order.id}</h3>
+                  <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                    order.status === 'En attente' ? 'bg-yellow-200 text-yellow-800' :
+                    order.status === 'En cours' ? 'bg-blue-200 text-blue-800' :
+                    order.status === 'Livrée' ? 'bg-green-200 text-green-800' :
+                    'bg-gray-200 text-gray-800'
+                  }`}>
+                    {order.status}
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex items-center">
+                    <Store className="w-5 h-5 mr-2 text-[#003670]" />
+                    <p>{order.Restaurant.name}</p>
+                  </div>
+                  <div className="flex items-center">
+                    <CreditCard className="w-5 h-5 mr-2 text-[#003670]" />
+                    <p>{order.totalPrice} €</p>
+                  </div>
+                  <div className="flex items-center">
+                    <ShoppingBag className="w-5 h-5 mr-2 text-[#003670]" />
+                    <p>{order.itemCount} article{order.itemCount > 1 ? 's' : ''}</p>
+                  </div>
+                  <div className="flex items-center">
+                    <Calendar className="w-5 h-5 mr-2 text-[#003670]" />
+                    <p>{new Date(order.createdAt).toLocaleDateString()}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
 
-export default Orders;
+export default OrdersList;

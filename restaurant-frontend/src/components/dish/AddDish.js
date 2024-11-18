@@ -6,6 +6,7 @@ function AddDish() {
     const [name, setName] = useState('');
     const [photo, setPhoto] = useState('');
     const [price, setPrice] = useState('');
+    const [description, setDescription] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
@@ -17,7 +18,7 @@ function AddDish() {
 
         try {
             await axios.post('http://localhost:8081/api/dishes', 
-                { name, photo, price: parseFloat(price) },
+                { name, photo, price: parseFloat(price), description },
                 { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
             );
             navigate('/restaurant/dishes');
@@ -68,6 +69,16 @@ function AddDish() {
                             required
                             step="0.01"
                             min="0"
+                            className="mt-1 block w-full border border-[#A7C7E7] rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#003670] focus:border-[#003670]"
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="description" className="block text-sm font-medium text-[#003670]">Description</label>
+                        <textarea
+                            id="description"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            required
                             className="mt-1 block w-full border border-[#A7C7E7] rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-[#003670] focus:border-[#003670]"
                         />
                     </div>

@@ -3,7 +3,7 @@ const Restaurant = require('../models/restaurant');
 
 exports.createDish = async (req, res) => {
   try {
-    const { name, photo, price } = req.body;
+    const { name, photo, price, description } = req.body;
 
     const restaurant = await Restaurant.findOne({ where: { userId: req.user.id } });
 
@@ -15,6 +15,7 @@ exports.createDish = async (req, res) => {
       name,
       photo,
       price,
+      description,
       RestaurantId: restaurant.id  
     });
 

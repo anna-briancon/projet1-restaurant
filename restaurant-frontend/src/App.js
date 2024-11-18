@@ -43,7 +43,7 @@ function App() {
             <Route path="/user" element={<UserLayout />}>
               <Route index element={<UserDashboard />} />
               <Route path="/user/profile" element={<Profile />} />
-              <Route path="/user/orders" element={<Orders />} />
+              <Route path="/user/orders" element={<UserOrders />} />
               <Route path="/user/cart" element={<Cart />} />
               <Route path="/user/restaurant/:id" element={<RestaurantDetails />} />
               <Route path="/user/dish/:id" element={<DishDetails />} />

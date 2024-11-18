@@ -1,14 +1,10 @@
 import React from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { Home, User, ShoppingBag, ShoppingCart, LogOut } from 'lucide-react';
+import { Home, User, ShoppingBag, ShoppingCart, LogOut, Utensils } from 'lucide-react';
 
 function UserLayout() {
   const location = useLocation();
   const navigate = useNavigate();
-
-  const isActive = (path) => {
-    return location.pathname === path ? 'bg-[#003670] text-white' : 'text-[#003670] hover:bg-[#A7C7E7]';
-  };
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -17,53 +13,69 @@ function UserLayout() {
   };
 
   return (
-    <div className="flex min-h-screen bg-[#F0F8FF]">
-      <nav className="w-64 bg-white shadow-md flex flex-col justify-between">
-        <div>
-          <Link to="/user" className="block text-2xl font-bold text-[#003670] p-4">
-            FoodApp
-          </Link>
-          <div className="flex flex-col space-y-2 mt-8">
-            <Link
-              to="/user"
-              className={`flex items-center px-4 py-2 ${isActive('/restaurants')}`}
-            >
-              <Home className="mr-2 h-4 w-4" />
-              Restaurants
-            </Link>
-            <Link
-              to="/user/profile"
-              className={`flex items-center px-4 py-2 ${isActive('/profile')}`}
-            >
-              <User className="mr-2 h-4 w-4" />
-              Profil
-            </Link>
-            <Link
-              to="/user/orders"
-              className={`flex items-center px-4 py-2 ${isActive('/orders')}`}
-            >
-              <ShoppingBag className="mr-2 h-4 w-4" />
-              Commandes
-            </Link>
-            <Link
-              to="/user/cart"
-              className="flex items-center px-4 py-2 bg-[#003670] text-white hover:bg-[#002550] transition-colors"
-            >
-              <ShoppingCart className="mr-2 h-4 w-4" />
-              Panier
-            </Link>
-          </div>
+    <div className="flex h-screen bg-[#F0F8FF]">
+      <aside className="w-64 bg-[#003670] text-white shadow-lg flex flex-col">
+        <div className="p-5">
+          <Utensils className="text-[#A7C7E7] mr-4" size={48} />
         </div>
-        <button
-          onClick={handleLogout}
-          className="flex items-center px-4 py-2 mb-4 text-[#003670] hover:bg-[#A7C7E7] transition-colors"
+        <nav className="flex-grow mt-6">
+          <Link 
+            to="/user" 
+            className={`flex items-center py-3 px-6 text-sm font-medium rounded-r-full transition-colors duration-200 ${
+              location.pathname === '/user' 
+                ? 'bg-[#A7C7E7] text-[#003670]' 
+                : 'text-[#A7C7E7] hover:bg-[#004d99] hover:text-white'
+            }`}
+          >
+            <Home className="mr-3" size={18} />
+            Restaurants
+          </Link>
+          <Link 
+            to="/user/profile" 
+            className={`flex items-center py-3 px-6 text-sm font-medium rounded-r-full transition-colors duration-200 ${
+              location.pathname === '/user/profile' 
+                ? 'bg-[#A7C7E7] text-[#003670]' 
+                : 'text-[#A7C7E7] hover:bg-[#004d99] hover:text-white'
+            }`}
+          >
+            <User className="mr-3" size={18} />
+            Profil
+          </Link>
+          <Link 
+            to="/user/orders" 
+            className={`flex items-center py-3 px-6 text-sm font-medium rounded-r-full transition-colors duration-200 ${
+              location.pathname === '/user/orders' 
+                ? 'bg-[#A7C7E7] text-[#003670]' 
+                : 'text-[#A7C7E7] hover:bg-[#004d99] hover:text-white'
+            }`}
+          >
+            <ShoppingBag className="mr-3" size={18} />
+            Commandes
+          </Link>
+          <Link 
+            to="/user/cart" 
+            className={`flex items-center py-3 px-6 text-sm font-medium rounded-r-full transition-colors duration-200 ${
+              location.pathname === '/user/cart' 
+                ? 'bg-[#A7C7E7] text-[#003670]' 
+                : 'text-[#A7C7E7] hover:bg-[#004d99] hover:text-white'
+            }`}
+          >
+            <ShoppingCart className="mr-3" size={18} />
+            Panier
+          </Link>
+        </nav>
+        <button 
+          onClick={handleLogout} 
+          className="w-full py-3 px-6 text-[#A7C7E7] hover:bg-[#004d99] hover:text-white flex items-center justify-start mt-auto mb-8 transition-colors duration-200"
         >
-          <LogOut className="mr-2 h-4 w-4" />
+          <LogOut className="mr-3" size={18} />
           Déconnexion
         </button>
-      </nav>
-      <main className="flex-1 p-8">
-        <Outlet />
+      </aside>
+      <main className="flex-1 overflow-y-auto p-8">
+        <div className="max-w-7xl mx-auto">
+          <Outlet />
+        </div>
       </main>
     </div>
   );

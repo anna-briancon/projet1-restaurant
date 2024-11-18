@@ -7,6 +7,7 @@ const restaurateurRoutes = require('./src/routes/restaurateurRoutes');
 const dishRoutes = require('./src/routes/dishRoutes');
 const orderRoutes = require('./src/routes/orderRoutes');
 const userRoutes = require('./src/routes/userRoutes');
+const cartRoutes = require('./src/routes/cartRoutes');
 
 const app = express();
 
@@ -17,11 +18,13 @@ const User = require('./src/models/user');
 const Restaurant = require('./src/models/restaurant');
 const Dish = require('./src/models/dish');
 const Order = require('./src/models/order');
+const Cart = require('./src/models/cart');
 
-User.associate({ Restaurant, Order });
+User.associate({ Restaurant, Order, Cart });
 Restaurant.associate({ User, Dish, Order });
-Dish.associate({ Restaurant });
-Order.associate({ User, Restaurant });
+Dish.associate({ Restaurant, Cart, Order });
+Order.associate({ User, Restaurant, Dish });
+Cart.associate({ User, Dish, Order });
 
 app.use('/api/auth', authRoutes);
 app.use('/api/restaurant', restaurantRoutes);
@@ -29,7 +32,8 @@ app.use('/api/restaurateurs', restaurateurRoutes);
 app.use('/api/dishes', dishRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/user', userRoutes);
-
+app.use('/api/user/cart', cartRoutes);
+app.use('/api/user/orders', orderRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

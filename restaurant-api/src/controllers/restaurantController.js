@@ -1,5 +1,6 @@
 const e = require('express');
 const Restaurant = require('../models/restaurant');
+const { post } = require('../routes/orderRoutes');
 
 exports.getRestaurantInfo = async (req, res) => {
   try {
@@ -11,6 +12,10 @@ exports.getRestaurantInfo = async (req, res) => {
 
     res.json({
       name: restaurant.name,
+      address: restaurant.address,
+      postalCode: restaurant.postalCode,
+      city: restaurant.city,
+      
     });
   } catch (error) {
     console.error('Error fetching restaurant info:', error);

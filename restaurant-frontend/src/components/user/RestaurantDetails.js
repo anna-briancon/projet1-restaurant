@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
+import { ShoppingCart } from 'lucide-react';
 
 function RestaurantDetails() {
   const { id } = useParams();
@@ -14,11 +15,11 @@ function RestaurantDetails() {
       try {
         const token = localStorage.getItem('token');
         const headers = {
-            Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`
         };
         const [restaurantRes, dishesRes] = await Promise.all([
-            axios.get(`http://localhost:8081/api/restaurant/${id}`, { headers }),
-            axios.get(`http://localhost:8081/api/restaurant/${id}/dishes`, { headers })
+          axios.get(`http://localhost:8081/api/restaurant/${id}`, { headers }),
+          axios.get(`http://localhost:8081/api/restaurant/${id}/dishes`, { headers })
         ]);
         setRestaurant(restaurantRes.data);
         setDishes(dishesRes.data);
@@ -37,6 +38,16 @@ function RestaurantDetails() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <div className="flex justify-between items-center mb-4">
+
+        <Link to="/user" className="text-[#003670] hover:underline block mb-4">
+          &larr; Retour à la liste des restaurants
+        </Link>
+        <Link to="/user/cart" className="flex items-center px-4 py-2 bg-[#003670] text-white rounded-md hover:bg-[#002550] transition-colors">
+          <ShoppingCart className="mr-2 h-4 w-4" />
+          Panier
+        </Link>
+      </div>
       <h1 className="text-3xl font-bold text-[#003670] mb-6">{restaurant.name}</h1>
       <p className="mb-4 text-gray-600">{restaurant.description}</p>
       <h2 className="text-2xl font-bold text-[#003670] mb-4">Menu</h2>
@@ -49,7 +60,7 @@ function RestaurantDetails() {
             </div>
             <div className="p-4 bg-gray-50">
               <p className="font-bold text-[#003670]">{dish.price} €</p>
-              <Link 
+              <Link
                 to={`/user/dish/${dish.id}`}
                 className="mt-2 block w-full text-center px-4 py-2 bg-[#003670] text-white rounded-md hover:bg-[#002550] transition-colors"
               >

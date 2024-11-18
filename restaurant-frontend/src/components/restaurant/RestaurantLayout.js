@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { Coffee, ShoppingBag, LogOut } from 'lucide-react';
+import { Coffee, Home, ShoppingBag, LogOut } from 'lucide-react';
 import axios from 'axios';
 
 function RestaurantLayout() {
@@ -67,36 +67,57 @@ function RestaurantLayout() {
 
     return (
         <div className="flex h-screen bg-[#F0F8FF]">
-            <aside className="w-64 bg-[#003670] text-white p-6 flex flex-col">
-                <Link to="/restaurant" className="flex items-center space-x-2 mb-8">
-                    <h1 className="text-2xl font-bold">Mon Restaurant</h1>
-                </Link>
-                <nav className="space-y-4 flex-grow">
-                    <Link
-                        to="/restaurant/dishes"
-                        className={`flex items-center space-x-2 p-2 rounded ${location.pathname.includes('/dishes') ? 'bg-[#A7C7E7] text-[#003670]' : 'hover:bg-[#A7C7E7] hover:text-[#003670]'}`}
+            <aside className="w-64 bg-[#003670] text-white shadow-lg flex flex-col">
+                <div className="p-5">
+                    <h1 className="text-2xl font-bold text-[#A7C7E7]">Mon Restaurant</h1>
+                </div>
+                <nav className="flex-grow mt-6">
+                    <Link 
+                        to="/restaurant" 
+                        className={`flex items-center py-3 px-6 text-sm font-medium rounded-r-full transition-colors duration-200 ${
+                            location.pathname === '/restaurant' 
+                                ? 'bg-[#A7C7E7] text-[#003670]' 
+                                : 'text-[#A7C7E7] hover:bg-[#004d99] hover:text-white'
+                        }`}
                     >
-                        <Coffee size={20} />
-                        <span>Plats</span>
+                        <Home className="mr-3" size={18} />
+                        Mon Restaurant
                     </Link>
-                    <Link
-                        to="/restaurant/orders"
-                        className={`flex items-center space-x-2 p-2 rounded ${location.pathname.includes('/orders') ? 'bg-[#A7C7E7] text-[#003670]' : 'hover:bg-[#A7C7E7] hover:text-[#003670]'}`}
+                    <Link 
+                        to="/restaurant/dishes" 
+                        className={`flex items-center py-3 px-6 text-sm font-medium rounded-r-full transition-colors duration-200 ${
+                            location.pathname.includes('/dishes') 
+                                ? 'bg-[#A7C7E7] text-[#003670]' 
+                                : 'text-[#A7C7E7] hover:bg-[#004d99] hover:text-white'
+                        }`}
                     >
-                        <ShoppingBag size={20} />
-                        <span>Commandes</span>
+                        <Coffee className="mr-3" size={18} />
+                        Plats
+                    </Link>
+                    <Link 
+                        to="/restaurant/orders" 
+                        className={`flex items-center py-3 px-6 text-sm font-medium rounded-r-full transition-colors duration-200 ${
+                            location.pathname.includes('/orders') 
+                                ? 'bg-[#A7C7E7] text-[#003670]' 
+                                : 'text-[#A7C7E7] hover:bg-[#004d99] hover:text-white'
+                        }`}
+                    >
+                        <ShoppingBag className="mr-3" size={18} />
+                        Commandes
                     </Link>
                 </nav>
-                <button
-                    onClick={handleLogout}
-                    className="py-3 px-6 text-[#A7C7E7] hover:bg-[#004d99] hover:text-white flex items-center justify-start mt-auto transition-colors duration-200"
+                <button 
+                    onClick={handleLogout} 
+                    className="w-full py-3 px-6 text-[#A7C7E7] hover:bg-[#004d99] hover:text-white flex items-center justify-start mt-auto mb-8 transition-colors duration-200"
                 >
                     <LogOut className="mr-3" size={18} />
                     Déconnexion
                 </button>
             </aside>
-            <main className="flex-1 p-8 overflow-auto">
-                <Outlet />
+            <main className="flex-1 overflow-y-auto p-8">
+                <div className="max-w-7xl mx-auto">
+                    <Outlet />
+                </div>
             </main>
         </div>
     );

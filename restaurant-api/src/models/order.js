@@ -24,6 +24,10 @@ Order.associate = (models) => {
     foreignKey: 'RestaurantId',
     as: 'Restaurant'
   });
+  Order.belongsToMany(models.Dish, {
+    through: 'OrderDish',
+    as: 'Dishes'
+  });
 };
 
 module.exports = Order;

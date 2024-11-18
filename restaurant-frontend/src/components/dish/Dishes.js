@@ -42,6 +42,11 @@ function Dishes() {
         }
     };
 
+    const truncateDescription = (text, maxLength = 50) => {
+        if (text.length <= maxLength) return text;
+        return text.substr(0, maxLength) + '...';
+    };
+
     return (
         <div className="bg-white shadow-md rounded-lg p-6">
             <div className="flex justify-between items-center mb-6">
@@ -68,16 +73,27 @@ function Dishes() {
                                 <th className="px-6 py-3 text-left text-xs font-medium text-[#003670] uppercase tracking-wider">Nom</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-[#003670] uppercase tracking-wider">Photo</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-[#003670] uppercase tracking-wider">Prix</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-[#003670] uppercase tracking-wider">Actions</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-[#003670] uppercase tracking-wider">Description</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-[#003670] uppercase tracking-wider"></th>
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-[#A7C7E7]">
                             {dishes.map((dish) => (
-                                <tr key={dish.id} className="">
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-[#003670]">{dish.name}</td>
+                                <tr key={dish.id}>
+                                    <td className="px-6 py-4 text-sm text-[#003670]">{dish.name}</td>
                                     <td className="px-6 py-4 text-sm text-[#003670]">{dish.photo}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-[#003670]">{dish.price} €</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                    <td className="px-6 py-4 text-sm text-[#003670]">{dish.price} €</td>
+                                    <td className="px-6 py-4 text-sm text-[#003670] relative group">
+                                        <span className="cursor-pointer">
+                                            {truncateDescription(dish.description)}
+                                        </span>
+                                        {dish.description.length > 50 && (
+                                            <div className="absolute z-10 invisible bg-white border border-[#A7C7E7] p-2 rounded shadow-lg">
+                                                {dish.description}
+                                            </div>
+                                        )}
+                                    </td>
+                                    <td className="px-6 py-4 text-sm">
                                         <div className="flex items-center space-x-4">
                                             <button
                                                 onClick={() => handleDelete(dish.id)}

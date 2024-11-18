@@ -1,5 +1,8 @@
 const User = require('../models/user');
 const Restaurant = require('../models/restaurant');
+const Dish = require('../models/dish');
+const Order = require('../models/order');
+const sequelize = require('../config/database');
 
 exports.createRestaurateur = async (req, res) => {
   try {
@@ -44,6 +47,8 @@ exports.getAllRestaurateurs = async (req, res) => {
 };
 
 exports.deleteRestaurateur = async (req, res) => {
+  const t = await sequelize.transaction();
+
   try {
     const { id } = req.params;
     const restaurateur = await User.findOne({
@@ -52,16 +57,30 @@ exports.deleteRestaurateur = async (req, res) => {
     });
 
     if (!restaurateur) {
+      await t.rollback();
       return res.status(404).json({ message: 'Restaurateur not found' });
     }
 
     if (restaurateur.Restaurant) {
-      await restaurateur.Restaurant.destroy();
-    }
-    await restaurateur.destroy();
+      await Dish.destroy({
+        where: { RestaurantId: restaurateur.Restaurant.id },
+        transaction: t
+      });
 
-    res.json({ message: 'Restaurateur and associated restaurant deleted successfully' });
+      await Order.destroy({
+        where: { RestaurantId: restaurateur.Restaurant.id },
+        transaction: t
+      });
+
+      await restaurateur.Restaurant.destroy({ transaction: t });
+    }
+
+    await restaurateur.destroy({ transaction: t });
+
+    await t.commit();
+    res.json({ message: 'Restaurateur, restaurant, dishes, and orders deleted successfully' });
   } catch (error) {
+    await t.rollback();
     console.error('Error deleting restaurateur:', error);
     res.status(500).json({ message: 'Error deleting restaurateur', error: error.message });
   }

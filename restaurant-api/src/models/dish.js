@@ -13,6 +13,10 @@ const Dish = sequelize.define('Dish', {
   price: {
     type: DataTypes.DECIMAL(10, 2),
     allowNull: false
+  },
+  description: {
+    type: DataTypes.TEXT,
+    allowNull: true
   }
 }, {
   tableName: 'dishes',
@@ -23,6 +27,14 @@ Dish.associate = (models) => {
   Dish.belongsTo(models.Restaurant, {
     foreignKey: 'RestaurantId',
     as: 'Restaurant'
+  });
+  Dish.hasMany(models.Cart, {
+    foreignKey: 'dishId',
+    as: 'Cart'
+  });
+  Dish.belongsToMany(models.Order, {
+    through: 'OrderDish',
+    as: 'Orders'
   });
 };
 

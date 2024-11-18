@@ -43,14 +43,6 @@ function OrdersList() {
               <div className="p-6">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-xl font-semibold text-[#003670]">Commande #{order.id}</h3>
-                  <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                    order.status === 'En attente' ? 'bg-yellow-200 text-yellow-800' :
-                    order.status === 'En cours' ? 'bg-blue-200 text-blue-800' :
-                    order.status === 'Livrée' ? 'bg-green-200 text-green-800' :
-                    'bg-gray-200 text-gray-800'
-                  }`}>
-                    {order.status}
-                  </span>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex items-center">

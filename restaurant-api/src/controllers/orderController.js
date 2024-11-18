@@ -70,41 +70,58 @@ exports.createOrder = async (req, res) => {
     if (cartItems.length === 0) {
       return res.status(400).json({ message: 'Le panier est vide' });
     }
-    const restaurantId = cartItems[0].Dish.RestaurantId;
 
-    let totalPrice = 0;
-    let itemCount = 0;
-    cartItems.forEach(item => {
-      totalPrice += item.Dish.price * item.quantity;
-      itemCount += item.quantity;
-    });
+    const itemsByRestaurant = cartItems.reduce((acc, item) => {
+      const restaurantId = item.Dish.RestaurantId;
+      if (!acc[restaurantId]) {
+        acc[restaurantId] = [];
+      }
+      acc[restaurantId].push(item);
+      return acc;
+    }, {});
 
-    const order = await Order.create({
-      userId,
-      totalPrice,
-      itemCount,
-      UserId: req.user.id,
-      RestaurantId: restaurantId,
-      status: 'En attente'
-    });
-    for (const item of cartItems) {
-      await order.addDish(item.Dish, {
-        through: { quantity: item.quantity, price: item.Dish.price }
+    const orders = [];
+
+    for (const [restaurantId, items] of Object.entries(itemsByRestaurant)) {
+      let totalPrice = 0;
+      let itemCount = 0;
+      items.forEach(item => {
+        totalPrice += item.Dish.price * item.quantity;
+        itemCount += item.quantity;
       });
-    }
-    await Cart.destroy({ where: { userId } });
 
-    res.status(201).json({
-      message: 'Commande créée avec succès',
-      order: {
+      const order = await Order.create({
+        userId,
+        totalPrice,
+        itemCount,
+        UserId: req.user.id,
+        RestaurantId: restaurantId,
+        status: 'En attente'
+      });
+
+      for (const item of items) {
+        await order.addDish(item.Dish, {
+          through: { quantity: item.quantity, price: item.Dish.price }
+        });
+      }
+
+      orders.push({
         id: order.id,
         totalPrice: order.totalPrice,
         itemCount: order.itemCount,
-        status: order.status
-      }
+        status: order.status,
+        restaurantId: restaurantId
+      });
+    }
+
+    await Cart.destroy({ where: { userId } });
+
+    res.status(201).json({
+      message: 'Commandes créées avec succès',
+      orders: orders
     });
   } catch (error) {
-    console.error('Erreur lors de la création de la commande:', error);
+    console.error('Erreur lors de la création des commandes:', error);
     res.status(500).json({ message: 'Erreur serveur', error: error.message });
   }
 };

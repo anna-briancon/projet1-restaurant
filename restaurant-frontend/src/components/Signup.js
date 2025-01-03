@@ -85,7 +85,6 @@ function Signup() {
           </button>
         </form>
         <div className="mt-4 text-center">
-          <span className="text-[#003670]">Déjà inscrit ?</span>{' '}
           <Link to="/login" className="text-[#003670] font-medium hover:underline">
             Se connecter
           </Link>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Mail, Lock, LogIn } from 'lucide-react';
 
 function Login() {
@@ -80,6 +80,11 @@ function Login() {
             )}
           </button>
         </form>
+        <div className="mt-4 text-center">
+          <Link to="/signup" className="text-[#003670] font-medium hover:underline">
+            S'inscrire  
+          </Link>
+        </div>
       </div>
     </div>
   );

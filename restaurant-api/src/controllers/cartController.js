@@ -89,7 +89,7 @@ exports.getCart = async (req, res) => {
       }
     })));
   } catch (error) {
-    console.error('Error fetching cart:', error);
+    console.error('Erreur lors de la récupération du panier:', error);
     res.status(500).json({ message: 'Erreur serveur', error: error.message });
   }
 };
@@ -111,7 +111,7 @@ exports.updateCartItem = async (req, res) => {
 
     res.json(cartItem);
   } catch (error) {
-    console.error('Error updating cart item:', error);
+    console.error('Erreur lors de la mise à jour de l\'élément du panier:', error);
     res.status(500).json({ message: 'Erreur serveur', error: error.message });
   }
 };
@@ -131,7 +131,7 @@ exports.removeFromCart = async (req, res) => {
 
     res.json({ message: 'Item supprimé du panier avec succès' });
   } catch (error) {
-    console.error('Error removing from cart:', error);
+    console.error('Erreur lors de la suppression du panier:', error);
     res.status(500).json({ message: 'Erreur serveur', error: error.message });
   }
 };
@@ -151,7 +151,7 @@ exports.removeFromCart = async (req, res) => {
 
     res.json({ message: 'Item supprimé du panier avec succès' });
   } catch (error) {
-    console.error('Error removing from cart:', error);
+    console.error('Erreur lors de la suppression du panier:', error);
     res.status(500).json({ message: 'Erreur serveur', error: error.message });
   }
 }

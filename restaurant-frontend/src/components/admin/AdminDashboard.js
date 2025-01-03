@@ -47,13 +47,13 @@ function AdminDashboard() {
         <AdminLayout>
             <div className="bg-white shadow-md rounded-lg p-6">
                 <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-2xl font-bold text-[#003670]">Liste des restaurants</h2>
+                    <h2 className="text-2xl font-bold text-[#003670]">Restaurants</h2>
                     <Link 
                         to="/admin/add-restaurant" 
                         className="bg-[#A7C7E7] hover:bg-[#003670] text-[#003670] hover:text-white font-medium py-2 px-4 rounded-full flex items-center transition-colors duration-200"
                     >
                         <Plus className="mr-2" size={18} />
-                        Ajouter un restaurant
+                        Ajouter un restaurateur
                     </Link>
                 </div>
                 {loading && (

@@ -9,5 +9,5 @@ router.post('/', authenticate, authorize('RESTAURANT'), upload.single('photo'), 
 
 router.delete('/:id', authenticate, authorize('RESTAURANT'), dishController.deleteDish);
 router.get('/', authenticate, dishController.getDishes);
-router.get('/:id', authenticate, authorize('USER'), dishController.getDish);
+router.get('/:id', authenticate, dishController.getDish);
 module.exports = router;

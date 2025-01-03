@@ -16,7 +16,7 @@ function AdminLayout({ children }) {
         <div className="flex h-screen bg-[#F0F8FF]">
             <aside className="w-64 bg-[#003670] text-white shadow-lg flex flex-col">
                 <div className="p-5">
-                    <h1 className="text-2xl font-bold text-[#A7C7E7]">Admin Panel</h1>
+                    <h1 className="text-2xl font-bold text-[#A7C7E7]">Admin</h1>
                 </div>
                 <nav className="flex-grow mt-6">
                     <Link 
@@ -28,7 +28,7 @@ function AdminLayout({ children }) {
                         }`}
                     >
                         <LayoutDashboard className="mr-3" size={18} />
-                        Dashboard
+                        Restaurateurs
                     </Link>
                 </nav>
                 <button 

@@ -3,7 +3,7 @@ const User = require('../models/user');
 const Restaurant = require('../models/restaurant');
 const Dish = require('../models/dish');
 const Cart = require('../models/cart');
-
+const OrderDish = require('../models/orderDish');
 exports.getRestaurantOrders = async (req, res) => {
   try {
     const restaurant = await Restaurant.findOne({ where: { UserId: req.user.id } });
@@ -18,6 +18,16 @@ exports.getRestaurantOrders = async (req, res) => {
           model: User,
           as: 'Customer',
           attributes: ['email', 'name']
+        },
+        {
+          model: Dish,
+          as: 'Dishes',
+          through: {
+            model: OrderDish,
+            as: 'OrderDish',
+            attributes: ['quantity', 'price']
+          },
+          attributes: ['id', 'name', 'price']
         }
       ],
       order: [['createdAt', 'DESC']]
@@ -99,9 +109,20 @@ exports.createOrder = async (req, res) => {
         status: 'En attente'
       });
 
-      for (const item of items) {
-        await order.addDish(item.Dish, {
-          through: { quantity: item.quantity, price: item.Dish.price }
+      const groupedDishes = items.reduce((acc, item) => {
+        if (!acc[item.Dish.id]) {
+          acc[item.Dish.id] = { dish: item.Dish, quantity: 0 };
+        }
+        acc[item.Dish.id].quantity += item.quantity;
+        return acc;
+      }, {});
+
+      for (const [dishId, { dish, quantity }] of Object.entries(groupedDishes)) {
+        await OrderDish.create({
+          OrderId: order.id,
+          DishId: dishId,
+          quantity: quantity,
+          price: dish.price
         });
       }
 
@@ -129,13 +150,24 @@ exports.createOrder = async (req, res) => {
 exports.getOrders = async (req, res) => {
   try {
     const userId = req.user.id;
+
     const orders = await Order.findAll({
-      where: { UserId: userId },
+      where: { userId: userId },
       include: [
-        { 
-          model: Restaurant, 
+        {
+          model: Restaurant,
           as: 'Restaurant',
           attributes: ['id', 'name']
+        },
+        {
+          model: Dish,
+          as: 'Dishes',
+          through: {
+            model: OrderDish,
+            as: 'OrderDish',
+            attributes: ['quantity', 'price']
+          },
+          attributes: ['id', 'name', 'price']
         }
       ],
       order: [['createdAt', 'DESC']]
@@ -144,6 +176,7 @@ exports.getOrders = async (req, res) => {
     res.json(orders);
   } catch (error) {
     console.error('Erreur lors de la récupération des commandes:', error);
-    res.status(500).json({ message: 'Erreur serveur', error: error.message });
+    res.status(500).json({ message: 'Erreur serveur' });
   }
+
 };

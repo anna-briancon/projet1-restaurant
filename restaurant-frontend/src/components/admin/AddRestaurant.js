@@ -36,7 +36,7 @@ function AddRestaurant() {
     <AdminLayout>
       <div className="bg-white shadow-md rounded-lg p-6">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-[#003670]">Ajouter un nouveau restaurant</h2>
+          <h2 className="text-2xl font-bold text-[#003670]">Ajouter un nouveau restaurateur</h2>
           <button
             onClick={() => navigate('/admin')}
             className="bg-[#A7C7E7] hover:bg-[#003670] text-[#003670] hover:text-white font-medium py-2 px-4 rounded-full flex items-center transition-colors duration-200"
